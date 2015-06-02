@@ -13,7 +13,7 @@
         android:title="@string/prefUploadLocation"
         android:summary="@string/prefUploadLocationSummary" />
 
-    <CheckBoxPreference android:key="theme"
+    <CheckBoxPreference android:key="darkTheme"
         android:title="@string/prefTheme"
         android:summary="@string/prefThemeSummary" />
 

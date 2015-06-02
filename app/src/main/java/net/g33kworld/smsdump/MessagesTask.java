@@ -35,6 +35,9 @@ import android.widget.ProgressBar;
                 data += "--------------------\n";
                 data += getMessage(cursor);
                 publishProgress(cursor.getPosition());
+                if(isCancelled()) {
+                    return null;
+                }
             } while(cursor.moveToNext());
 
             return new String[] {uri[0], firstMessage, data};

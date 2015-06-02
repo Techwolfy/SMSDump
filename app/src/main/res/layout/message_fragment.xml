@@ -4,20 +4,40 @@
     android:layout_height="match_parent"
     tools:context="net.g33kworld.smsdump.SMSDump">
 
+    <TextView android:id="@+id/progressLabel"
+        android:text="@string/progressLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
     <ProgressBar android:id="@+id/progress"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_margin="10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/progressLabel" />
+
+    <TextView android:id="@+id/uploadLabel"
+        android:text="@string/uploadLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/progress" />
 
     <ProgressBar android:id="@+id/upload"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_below="@id/progress" />
+        android:layout_below="@id/progress"
+        android:layout_alignLeft="@id/progress" />
 
 
     <TextView android:id="@+id/text"
@@ -26,6 +46,9 @@
         android:freezesText="true"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_below="@id/upload" />
 
 </RelativeLayout>

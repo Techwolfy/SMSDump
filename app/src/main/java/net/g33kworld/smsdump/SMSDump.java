@@ -25,26 +25,26 @@ public class SMSDump extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         //Retrieve user preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         checkDefaultPrefs(prefs);
         autoLoad = prefs.getBoolean("autoLoad", true);
         autoUpload = prefs.getBoolean("autoUpload", true);
         uploadLocation = prefs.getString("uploadLocation", "http://techwolf.tk/sms.php");
+        //Theme must be set before super.onCreate() is called
         if(prefs.getBoolean("darkTheme", false)) {
-            //setTheme(android.support.v7.appcompat.R.style.Theme_AppCompat);
-            //TODO: Theme support!
+            setTheme(android.support.v7.appcompat.R.style.Theme_AppCompat);
         }
 
         //Create main View
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
         //Get a reference to the message fragment
         fragment = (MessageFragment)getFragmentManager().findFragmentById(R.id.messageFragment);
 
         //Load messages from inbox and sent stores
+        //isLoading() returns true once the fragment has begun loading data for the first time, and is never reset
         if(autoLoad && !fragment.isLoading()) {
             loadMessages();
         }
@@ -61,9 +61,14 @@ public class SMSDump extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         //Handle action bar / menu item clicks here.
         int id = item.getItemId();
-        //TODO: Load and Upload buttons!
 
-        if(id == R.id.actionSettings) {
+        if(id == R.id.actionLoad) {
+            loadMessages();
+        } else if(id == R.id.actionUpload) {
+            fragment.uploadData(INBOX, uploadLocation);
+            fragment.uploadData(SENT, uploadLocation);
+            //fragment.uploadData(DRAFTS, uploadLocation);
+        } else if(id == R.id.actionSettings) {
             startActivity(new Intent(this, Settings.class));
         }
 

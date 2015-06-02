@@ -3,9 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="net.g33kworld.smsdump.SMSDump">
 
+    <item android:id="@+id/actionLoad"
+        android:title="@string/actionLoad"
+        android:icon="@drawable/ic_refresh"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/actionUpload"
+        android:title="@string/actionUpload"
+        android:icon="@drawable/ic_file_upload"
+        app:showAsAction="always" />
+
     <item android:id="@+id/actionSettings"
         android:title="@string/actionSettings"
-        android:orderInCategory="100"
+        android:icon="@drawable/ic_settings"
         app:showAsAction="always" />
 
 </menu>

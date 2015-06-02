@@ -4,7 +4,11 @@
     <string name="titleSettings">Settings</string>
 
     <string name="init">SMSDump running...\n</string>
+    <string name="progressLabel">Progress:</string>
+    <string name="uploadLabel">Upload:</string>
 
+    <string name="actionLoad">Load</string>
+    <string name="actionUpload">Upload</string>
     <string name="actionSettings">Settings</string>
 
     <string name="prefAutoLoadMsg">Auto Load Messages</string>
@@ -14,5 +18,5 @@
     <string name="prefUploadLocation">Upload Location</string>
     <string name="prefUploadLocationSummary">Specify the web address to receive the message data POST.</string>
     <string name="prefTheme">Dark Theme</string>
-    <string name="prefThemeSummary">Switch to a dark theme (takes effect on next run).</string>
+    <string name="prefThemeSummary">Switch to a dark theme (takes effect on rotate or restart).</string>
 </resources>
