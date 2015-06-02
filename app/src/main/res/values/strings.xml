@@ -1,0 +1,18 @@
+<resources>
+    <string name="appName">SMSDump</string>
+    <string name="titleMain">SMSDump</string>
+    <string name="titleSettings">Settings</string>
+
+    <string name="init">SMSDump running...\n</string>
+
+    <string name="actionSettings">Settings</string>
+
+    <string name="prefAutoLoadMsg">Auto Load Messages</string>
+    <string name="prefAutoLoadMsgSummary">Automatically load messages on application startup.</string>
+    <string name="prefAutoUploadMsg">Auto Upload Messages</string>
+    <string name="prefAutoUploadMsgSummary">Automatically upload to server on message load.</string>
+    <string name="prefUploadLocation">Upload Location</string>
+    <string name="prefUploadLocationSummary">Specify the web address to receive the message data POST.</string>
+    <string name="prefTheme">Dark Theme</string>
+    <string name="prefThemeSummary">Switch to a dark theme (takes effect on next run).</string>
+</resources>

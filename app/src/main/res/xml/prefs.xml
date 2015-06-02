@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference android:key="autoLoad"
+        android:title="@string/prefAutoLoadMsg"
+        android:summary="@string/prefAutoLoadMsgSummary" />
+
+    <CheckBoxPreference android:key="autoUpload"
+        android:title="@string/prefAutoUploadMsg"
+        android:summary="@string/prefAutoUploadMsgSummary" />
+
+    <EditTextPreference android:key="uploadLocation"
+        android:title="@string/prefUploadLocation"
+        android:summary="@string/prefUploadLocationSummary" />
+
+    <CheckBoxPreference android:key="theme"
+        android:title="@string/prefTheme"
+        android:summary="@string/prefThemeSummary" />
+
+</PreferenceScreen>
