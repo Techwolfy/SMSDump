@@ -1,7 +1,6 @@
 package net.g33kworld.smsdump;
 
 import android.os.AsyncTask;
-import android.widget.ProgressBar;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -58,6 +57,12 @@ import java.net.URL;
     @Override
     protected void onProgressUpdate(Integer... position) {
         parent.getUploadBar().setProgress(position[0]);
+    }
+
+    @Override
+    protected void onPostExecute(Void result) {
+        //TODO: Check for errors and report them!
+        parent.displayText(parent.getResources().getString(R.string.uploadComplete));
     }
 
 }

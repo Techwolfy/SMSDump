@@ -1,7 +1,10 @@
 package net.g33kworld.smsdump;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.method.ScrollingMovementMethod;
 import android.view.ContextThemeWrapper;
@@ -10,6 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 
 //Basic container for retained data
 public class MessageFragment extends Fragment {
@@ -19,8 +30,9 @@ public class MessageFragment extends Fragment {
     private ProgressBar upload;
     private String[] messages;
     private MessagesTask[] messagesTasks;
-    private UploadTask[] uploadTasks;
+    private UploadTask uploadTask;
     private boolean isLoading;
+    private boolean[] loaded;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,8 +42,9 @@ public class MessageFragment extends Fragment {
 
         messages = new String[3];   //{INBOX, SENT, DRAFTS}
         messagesTasks = new MessagesTask[3];
-        uploadTasks = new UploadTask[3];
+        uploadTask = null;
         isLoading = false;
+        loaded = new boolean[] {false, false, false};
     }
 
     @Override
@@ -60,49 +73,94 @@ public class MessageFragment extends Fragment {
         return isLoading;
     }
 
-    protected void loadMessages(String uri) {
-        displayText("Loading \"" + uri + "\"...\n");
-        if(uri.equals(SMSDump.INBOX)) {
-            if(messagesTasks[0] != null) {
-                messagesTasks[0].cancel(true);
+    protected void loadMessages(String... uris) {
+        displayText(getResources().getString(R.string.loadingMessages) + "\n\n");
+        for(String uri : uris) {
+            if (SMSDump.uriToIndex(uri) == -1) {
+                Toast.makeText(this.getActivity(), R.string.errorUri + uri, Toast.LENGTH_SHORT).show();
+                continue;
+            } else {
+                if (messagesTasks[SMSDump.uriToIndex(uri)] != null) {
+                    messagesTasks[SMSDump.uriToIndex(uri)].cancel(true);
+                }
+                messagesTasks[SMSDump.uriToIndex(uri)] = (MessagesTask)new MessagesTask(this).execute(uri);
             }
-            messagesTasks[0] = (MessagesTask)new MessagesTask(this).execute(uri);
-        } else if(uri.equals(SMSDump.SENT)) {
-            if(messagesTasks[1] != null) {
-                messagesTasks[1].cancel(true);
-            }
-            messagesTasks[1] = (MessagesTask)new MessagesTask(this).execute(uri);
-        } else if(uri.equals(SMSDump.DRAFTS)) {
-            if(messagesTasks[2] != null) {
-                messagesTasks[2].cancel(true);
-            }
-            messagesTasks[2] = (MessagesTask)new MessagesTask(this).execute(uri);
+            isLoading = true;
         }
-        isLoading = true;
     }
 
     protected void messagesLoaded(String uri, String data) {
-        if(uri.equals(SMSDump.INBOX)) {
-            messages[0] = data;
-        } else if(uri.equals(SMSDump.SENT)) {
-            messages[1] = data;
-        } else if(uri.equals(SMSDump.DRAFTS)) {
-            messages[2] = data;
+        if(SMSDump.uriToIndex(uri) == -1) {
+            Toast.makeText(this.getActivity(), R.string.errorUri + uri, Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            messages[SMSDump.uriToIndex(uri)] = data;
+            loaded[SMSDump.uriToIndex(uri)] = true;
+            ((SMSDump)getActivity()).messagesLoaded(uri);
         }
-        ((SMSDump)getActivity()).messagesLoaded(uri);
     }
 
-    protected void uploadData(String uri, String uploadLocation) {
-        //NOTE: Semi-silently fails if messages aren't loaded (no failure message, but no progress bar either)
-        if(uri.equals(SMSDump.INBOX) && messages[0] != null) {
-            displayText("Uploading \"" + uri + "\"...\n");
-            uploadTasks[0] = (UploadTask)new UploadTask(this, uploadLocation).execute(messages[0]);
-        } else if(uri.equals(SMSDump.SENT) && messages[1] != null) {
-            displayText("Uploading \"" + uri + "\"...\n");
-            uploadTasks[1] = (UploadTask)new UploadTask(this, uploadLocation).execute(messages[1]);
-        } else if(uri.equals(SMSDump.DRAFTS) && messages[2] != null) {
-            displayText("Uploading \"" + uri + "\"...\n");
-            uploadTasks[2] = (UploadTask)new UploadTask(this, uploadLocation).execute(messages[2]);
+    protected String collateMessages(String... uris) {
+        String collate = "";
+        for(String uri : uris) {
+            if(SMSDump.uriToIndex(uri) == -1) {
+                Toast.makeText(this.getActivity(), R.string.errorUri + uri, Toast.LENGTH_SHORT).show();
+                return null;
+            } else if(!loaded[SMSDump.uriToIndex(uri)]) {
+                Toast.makeText(this.getActivity(), R.string.errorNotLoaded, Toast.LENGTH_SHORT).show();
+                return null;
+            } else {
+                collate += messages[SMSDump.uriToIndex(uri)];
+                collate += "\n";
+            }
+        }
+        return collate;
+    }
+
+    protected File saveMessages(String saveLocation, String... uris) {
+        String data = collateMessages(uris);
+        if(data != null && Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+            displayText(getResources().getString(R.string.savingMessages) + "\n");
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), saveLocation);
+            try {
+                FileOutputStream out = new FileOutputStream(file);
+                out.write(data.getBytes());
+                out.flush();
+                out.close();
+                displayText(getResources().getString(R.string.saveComplete) + "\n");
+            } catch(FileNotFoundException e) {
+                Toast.makeText(this.getActivity(), getResources().getString(R.string.errorFileOpen), Toast.LENGTH_SHORT).show();
+                return null;
+            } catch(IOException e) {
+                Toast.makeText(this.getActivity(), getResources().getString(R.string.errorFileWrite), Toast.LENGTH_SHORT).show();
+                return null;
+            }
+            return file;
+        }
+        return null;
+    }
+
+    protected void emailMessages(String saveLocation, String... uris) {
+        File file = saveMessages(saveLocation, uris);
+        if(file == null) {
+            return;
+        }
+        String emailBody = getResources().getString(R.string.emailBody);
+        emailBody += DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG).format(new Date());
+        emailBody += ".\n";
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.emailTitle));
+        intent.putExtra(Intent.EXTRA_TEXT, emailBody);
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        intent.setType("message/rfc822");
+        startActivity(intent);
+    }
+
+    protected void uploadMessages(String uploadLocation, String... uris) {
+        String data = collateMessages(uris);
+        if(data != null) {
+            displayText(getResources().getString(R.string.uploadingMessages) + "\n");
+            uploadTask = (UploadTask)new UploadTask(this, uploadLocation).execute(data);
         }
     }
 

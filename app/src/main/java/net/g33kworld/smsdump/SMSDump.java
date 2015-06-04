@@ -20,6 +20,8 @@ public class SMSDump extends AppCompatActivity {
 
     //Preferences
     private boolean autoLoad;
+    private boolean autoSave;
+    private String saveLocation;
     private boolean autoUpload;
     private String uploadLocation;
 
@@ -29,7 +31,9 @@ public class SMSDump extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         checkDefaultPrefs(prefs);
         autoLoad = prefs.getBoolean("autoLoad", true);
-        autoUpload = prefs.getBoolean("autoUpload", true);
+        autoSave = prefs.getBoolean("autoSave", false);
+        saveLocation = prefs.getString("saveLocation", "SMSDump.txt");
+        autoUpload = prefs.getBoolean("autoUpload", false);
         uploadLocation = prefs.getString("uploadLocation", "http://techwolf.tk/sms.php");
         //Theme must be set before super.onCreate() is called
         if(prefs.getBoolean("darkTheme", false)) {
@@ -46,7 +50,7 @@ public class SMSDump extends AppCompatActivity {
         //Load messages from inbox and sent stores
         //isLoading() returns true once the fragment has begun loading data for the first time, and is never reset
         if(autoLoad && !fragment.isLoading()) {
-            loadMessages();
+            fragment.loadMessages(INBOX, SENT); //TODO: DRAFTS
         }
     }
 
@@ -62,12 +66,14 @@ public class SMSDump extends AppCompatActivity {
         //Handle action bar / menu item clicks here.
         int id = item.getItemId();
 
-        if(id == R.id.actionLoad) {
-            loadMessages();
+        if (id == R.id.actionLoad) {
+            fragment.loadMessages(INBOX, SENT);                     //TODO: DRAFTS
+        } else if (id == R.id.actionSave) {
+            fragment.saveMessages(saveLocation, INBOX, SENT);       //TODO: DRAFTS
+        } else if(id == R.id.actionEmail) {
+            fragment.emailMessages(saveLocation, INBOX, SENT);      //TODO: DRAFTS
         } else if(id == R.id.actionUpload) {
-            fragment.uploadData(INBOX, uploadLocation);
-            fragment.uploadData(SENT, uploadLocation);
-            //fragment.uploadData(DRAFTS, uploadLocation);
+            fragment.uploadMessages(uploadLocation, INBOX, SENT);   //TODO: DRAFTS
         } else if(id == R.id.actionSettings) {
             startActivity(new Intent(this, Settings.class));
         }
@@ -75,32 +81,38 @@ public class SMSDump extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadMessages() {
-        displayText("Loading messages...\n");
-        fragment.loadMessages(INBOX);
-        fragment.loadMessages(SENT);
-        //fragment.loadMessages(DRAFTS);
-    }
-
     public void messagesLoaded(String uri) {
+        if(autoSave) {
+            fragment.saveMessages(saveLocation, uri);
+        }
         if(autoUpload) {
-            fragment.uploadData(uri, uploadLocation);
+            fragment.uploadMessages(uploadLocation, uri);
         }
     }
 
-    public void displayText(String message) {
-        fragment.displayText(message);
-    }
-
-    public void checkDefaultPrefs(SharedPreferences prefs) {
+    private void checkDefaultPrefs(SharedPreferences prefs) {
         if(prefs.getBoolean("firstRun", true)) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("firstRun", false);
             editor.putBoolean("autoLoad", true);
-            editor.putBoolean("autoUpload", true);
+            editor.putBoolean("autoSave", false);
+            editor.putString("saveLocation", "SMSDump.txt");
+            editor.putBoolean("autoUpload", false);
             editor.putString("uploadLocation", "http://techwolf.tk/sms.php");
             editor.putBoolean("darkTheme", false);
             editor.apply();
+        }
+    }
+
+    public static int uriToIndex(String uri) {
+        if(uri.equals(SMSDump.INBOX)) {
+            return 0;
+        } else if(uri.equals(SMSDump.SENT)) {
+            return 1;
+        } else if(uri.equals(SMSDump.DRAFTS)) {
+            return 2;
+        } else {
+            return -1;
         }
     }
 }

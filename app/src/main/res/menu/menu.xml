@@ -8,14 +8,24 @@
         android:icon="@drawable/ic_refresh"
         app:showAsAction="always" />
 
+    <item android:id="@+id/actionSave"
+        android:title="@string/actionSave"
+        android:icon="@drawable/ic_save"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/actionEmail"
+        android:title="@string/actionEmail"
+        android:icon="@drawable/ic_email"
+        app:showAsAction="ifRoom" />
+
     <item android:id="@+id/actionUpload"
         android:title="@string/actionUpload"
         android:icon="@drawable/ic_file_upload"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item android:id="@+id/actionSettings"
         android:title="@string/actionSettings"
         android:icon="@drawable/ic_settings"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 </menu>

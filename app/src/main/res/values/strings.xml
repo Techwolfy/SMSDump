@@ -1,22 +1,53 @@
 <resources>
+
+    <!-- Manifest & Action Bar Titles -->
     <string name="appName">SMSDump</string>
     <string name="titleMain">SMSDump</string>
     <string name="titleSettings">Settings</string>
 
+    <!-- Views -->
     <string name="init">SMSDump running...\n</string>
     <string name="progressLabel">Progress:</string>
     <string name="uploadLabel">Upload:</string>
 
+    <!-- User Messages -->
+    <string name="uriFirstMessage">" first message:"</string>
+    <string name="uriNoData">No Data: </string>
+    <string name="loadingMessages">Loading messages...</string>
+    <string name="savingMessages">Saving messages...</string>
+    <string name="uploadingMessages">Uploading messages...</string>
+    <string name="saveComplete">Save complete!</string>
+    <string name="uploadComplete">Upload complete!</string>
+
+    <!-- Email -->
+    <string name="emailTitle">SMSDump</string>
+    <string name="emailBody">"SMSDump on "</string>
+
+    <!-- Action Bar Items -->
     <string name="actionLoad">Load</string>
+    <string name="actionSave">Save</string>
+    <string name="actionEmail">Email</string>
     <string name="actionUpload">Upload</string>
     <string name="actionSettings">Settings</string>
 
+    <!-- Preferences -->
     <string name="prefAutoLoadMsg">Auto Load Messages</string>
     <string name="prefAutoLoadMsgSummary">Automatically load messages on application startup.</string>
+    <string name="prefAutoSaveMsg">Auto Save Messages</string>
+    <string name="prefAutoSaveMsgSummary">Automatically save messages after loading.</string>
+    <string name="prefSaveLocation">Save Location</string>
+    <string name="prefSaveLocationSummary">File name on internal storage to save messages to.</string>
     <string name="prefAutoUploadMsg">Auto Upload Messages</string>
     <string name="prefAutoUploadMsgSummary">Automatically upload to server on message load.</string>
     <string name="prefUploadLocation">Upload Location</string>
     <string name="prefUploadLocationSummary">Specify the web address to receive the message data POST.</string>
     <string name="prefTheme">Dark Theme</string>
     <string name="prefThemeSummary">Switch to a dark theme (takes effect on rotate or restart).</string>
+
+    <!-- Error Messages -->
+    <string name="errorUri">"Content URI not recognized: "</string>
+    <string name="errorNotLoaded">Messages not loaded!</string>
+    <string name="errorFileOpen">Error opening file!</string>
+    <string name="errorFileWrite">Error writing to file!</string>
+
 </resources>

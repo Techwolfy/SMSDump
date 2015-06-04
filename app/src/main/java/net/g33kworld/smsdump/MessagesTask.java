@@ -3,7 +3,6 @@ package net.g33kworld.smsdump;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.widget.ProgressBar;
 
 /* package-private */ class MessagesTask extends AsyncTask<String, Integer, String[]> {
 
@@ -56,10 +55,10 @@ import android.widget.ProgressBar;
     @Override
     protected void onPostExecute(String[] result) {
         if(result != null && result[1] != null) {
-            parent.displayText("\n" + result[0] + " first message:\n" + result[1]);
+            parent.displayText(result[0] + parent.getResources().getString(R.string.uriFirstMessage) + "\n" + result[1] + "\n");
             parent.messagesLoaded(result[0], data);
         } else if(result != null) {
-            parent.displayText("No Data: " + result + "\n");
+            parent.displayText(parent.getResources().getString(R.string.uriNoData) + result[0] + "\n");
         } else {
             //Default constructor used; do nothing.
         }

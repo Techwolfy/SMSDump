@@ -5,6 +5,14 @@
         android:title="@string/prefAutoLoadMsg"
         android:summary="@string/prefAutoLoadMsgSummary" />
 
+    <CheckBoxPreference android:key="autoSave"
+        android:title="@string/prefAutoSaveMsg"
+        android:summary="@string/prefAutoSaveMsgSummary" />
+
+    <EditTextPreference android:key="saveLocation"
+        android:title="@string/prefSaveLocation"
+        android:summary="@string/prefSaveLocationSummary" />
+
     <CheckBoxPreference android:key="autoUpload"
         android:title="@string/prefAutoUploadMsg"
         android:summary="@string/prefAutoUploadMsgSummary" />
