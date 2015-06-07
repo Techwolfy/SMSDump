@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewConfiguration;
+
+import java.lang.reflect.Field;
 
 public class SMSDump extends AppCompatActivity {
 
@@ -38,6 +41,17 @@ public class SMSDump extends AppCompatActivity {
         //Theme must be set before super.onCreate() is called
         if(prefs.getBoolean("darkTheme", false)) {
             setTheme(android.support.v7.appcompat.R.style.Theme_AppCompat);
+        }
+
+        //Reflection hack to force overflow menu on all Android versions
+        try {
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if(menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(ViewConfiguration.get(this), false);
+            }
+        } catch (Exception e) {
+            //Fallback to default config; it may look weird on some devices, but it's the expected behavior
         }
 
         //Create main View
