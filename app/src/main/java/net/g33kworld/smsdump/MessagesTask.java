@@ -25,7 +25,7 @@ import android.os.AsyncTask;
         }
         Cursor cursor = parent.getActivity().getApplicationContext().getContentResolver().query(Uri.parse(uri[0]), null, null, null, null);
 
-        if(cursor.moveToFirst()) { // must check the result to prevent exception
+        if(cursor != null && cursor.moveToFirst()) { //Error if cursor == null, no records if !cursor.moveToFirst()
             parent.getProgressBar().setMax(cursor.getCount());
             count = cursor.getCount();
             String firstMessage = getMessage(cursor);
@@ -59,6 +59,7 @@ import android.os.AsyncTask;
             parent.messagesLoaded(result[0], data);
         } else if(result != null) {
             parent.displayText(parent.getResources().getString(R.string.uriNoData) + result[0] + "\n");
+            parent.getProgressBar().setProgress(parent.getProgressBar().getMax());
         } else {
             //Default constructor used; do nothing.
         }

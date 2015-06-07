@@ -12,7 +12,7 @@
 
     <!-- User Messages -->
     <string name="uriFirstMessage">" first message:"</string>
-    <string name="uriNoData">No Data: </string>
+    <string name="uriNoData">"No Data: "</string>
     <string name="loadingMessages">Loading messages...</string>
     <string name="savingMessages">Saving messages...</string>
     <string name="uploadingMessages">Uploading messages...</string>

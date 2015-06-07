@@ -50,7 +50,7 @@ public class SMSDump extends AppCompatActivity {
         //Load messages from inbox and sent stores
         //isLoading() returns true once the fragment has begun loading data for the first time, and is never reset
         if(autoLoad && !fragment.isLoading()) {
-            fragment.loadMessages(INBOX, SENT); //TODO: DRAFTS
+            fragment.loadMessages(INBOX, SENT, DRAFTS);
         }
     }
 
@@ -67,13 +67,13 @@ public class SMSDump extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.actionLoad) {
-            fragment.loadMessages(INBOX, SENT);                     //TODO: DRAFTS
+            fragment.loadMessages(INBOX, SENT, DRAFTS);
         } else if (id == R.id.actionSave) {
-            fragment.saveMessages(saveLocation, INBOX, SENT);       //TODO: DRAFTS
+            fragment.saveMessages(saveLocation, INBOX, SENT, DRAFTS);
         } else if(id == R.id.actionEmail) {
-            fragment.emailMessages(saveLocation, INBOX, SENT);      //TODO: DRAFTS
+            fragment.emailMessages(saveLocation, INBOX, SENT, DRAFTS);
         } else if(id == R.id.actionUpload) {
-            fragment.uploadMessages(uploadLocation, INBOX, SENT);   //TODO: DRAFTS
+            fragment.uploadMessages(uploadLocation, INBOX, SENT, DRAFTS);
         } else if(id == R.id.actionSettings) {
             startActivity(new Intent(this, Settings.class));
         }
